@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MaternaAI — Feature Definitions</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F7F5F0;
+    --surface: #FFFFFF;
+    --surface2: #F0EDE6;
+    --border: #DDD9D0;
+    --text: #1A1814;
+    --text2: #6B6760;
+    --text3: #9C9890;
+    --teal: #0F6E56;
+    --teal-light: #E1F5EE;
+    --teal-mid: #1D9E75;
+    --blue: #0C447C;
+    --blue-light: #E6F1FB;
+    --amber: #633806;
+    --amber-light: #FAEEDA;
+    --amber-mid: #EF9F27;
+    --coral: #791F1F;
+    --coral-light: #FCEBEB;
+    --purple: #3C3489;
+    --purple-light: #EEEDFE;
+    --gray-light: #F1EFE8;
+    --gray-mid: #444441;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 14px;
+    line-height: 1.65;
+    min-height: 100vh;
+  }
+
+  .page {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 60px 40px 100px;
+  }
+
+  /* Header */
+  .header {
+    margin-bottom: 56px;
+    padding-bottom: 32px;
+    border-bottom: 1px solid var(--border);
+  }
+  .header-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    color: var(--teal-mid);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .header h1 {
+    font-family: 'Instrument Serif', serif;
+    font-size: 42px;
+    font-weight: 400;
+    line-height: 1.1;
+    letter-spacing: -0.5px;
+    margin-bottom: 14px;
+  }
+  .header h1 em {
+    font-style: italic;
+    color: var(--text2);
+  }
+  .header-desc {
+    color: var(--text2);
+    font-size: 15px;
+    max-width: 560px;
+    line-height: 1.6;
+  }
+
+  /* Legend */
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 48px;
+    padding: 16px 20px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+  }
+  .legend-label {
+    font-size: 11px;
+    color: var(--text3);
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 0.05em;
+    width: 100%;
+    margin-bottom: 4px;
+    text-transform: uppercase;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12.5px;
+    color: var(--text2);
+  }
+
+  /* Tags */
+  .tag {
+    display: inline-block;
+    font-family: 'DM Mono', monospace;
+    font-size: 10.5px;
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-weight: 500;
+    white-space: nowrap;
+    letter-spacing: 0.02em;
+  }
+  .tag-req { background: var(--blue-light); color: var(--blue); }
+  .tag-opt { background: var(--gray-light); color: var(--gray-mid); }
+  .tag-der { background: var(--purple-light); color: var(--purple); }
+  .tag-hard { background: var(--coral-light); color: var(--coral); }
+
+  /* Section */
+  .section {
+    margin-bottom: 52px;
+  }
+  .section-header {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    margin-bottom: 4px;
+  }
+  .section-title {
+    font-family: 'Instrument Serif', serif;
+    font-size: 22px;
+    font-weight: 400;
+    letter-spacing: -0.2px;
+  }
+  .section-source {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--text3);
+    letter-spacing: 0.04em;
+  }
+  .section-desc {
+    color: var(--text2);
+    font-size: 13px;
+    margin-bottom: 20px;
+    margin-top: 4px;
+  }
+
+  /* Feature cards */
+  .feat-list {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .feat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    transition: box-shadow 0.15s;
+  }
+  .feat-card:hover {
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  }
+
+  .feat-card-top {
+    display: grid;
+    grid-template-columns: 220px 140px 1fr;
+    align-items: start;
+    padding: 16px 20px;
+    gap: 0;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .feat-name {
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+    padding-top: 2px;
+  }
+
+  .feat-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .feat-unit {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--text3);
+    margin-top: 6px;
+  }
+
+  .feat-summary {
+    font-size: 13px;
+    color: var(--text2);
+    line-height: 1.5;
+    padding-top: 2px;
+  }
+
+  .feat-body {
+    border-top: 1px solid var(--border);
+    padding: 16px 20px;
+    display: none;
+    background: var(--bg);
+  }
+  .feat-body.open { display: block; }
+
+  .feat-body-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  .def-block {}
+  .def-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text3);
+    margin-bottom: 6px;
+  }
+  .def-text {
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.6;
+  }
+
+  .example-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 14px;
+    margin-top: 10px;
+    font-size: 12.5px;
+    color: var(--text2);
+    line-height: 1.5;
+  }
+  .example-box strong {
+    font-weight: 500;
+    color: var(--text);
+    display: block;
+    margin-bottom: 4px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .expand-hint {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--text3);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    justify-self: end;
+    align-self: start;
+    padding-top: 4px;
+    transition: color 0.15s;
+  }
+  .feat-card:hover .expand-hint {
+    color: var(--teal-mid);
+  }
+
+  /* Exclusions */
+  .exclusion-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .excl-card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px;
+  }
+  .excl-name {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .excl-name::before {
+    content: '✕';
+    font-size: 10px;
+    color: var(--coral);
+  }
+  .excl-reason {
+    font-size: 12.5px;
+    color: var(--text2);
+    line-height: 1.5;
+  }
+
+  /* Sub-model use table */
+  .use-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+    margin-top: 10px;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  .use-table th {
+    background: var(--surface2);
+    padding: 8px 10px;
+    text-align: center;
+    font-weight: 500;
+    font-family: 'DM Mono', monospace;
+    font-size: 10.5px;
+    letter-spacing: 0.04em;
+    color: var(--text2);
+    border-bottom: 1px solid var(--border);
+  }
+  .use-table td {
+    padding: 7px 10px;
+    text-align: center;
+    border-bottom: 0.5px solid var(--border);
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+  }
+  .use-table tr:last-child td { border-bottom: none; }
+  .use-table td:first-child { text-align: left; color: var(--text); }
+  .check { color: var(--teal-mid); font-size: 14px; }
+  .dash { color: var(--border); }
+
+  .footer {
+    margin-top: 60px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--text3);
+    letter-spacing: 0.04em;
+    display: flex;
+    justify-content: space-between;
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="header">
+    <div class="header-eyebrow">MaternaAI · Phase 1 · Reference Document 01</div>
+    <h1>Feature <em>Definitions</em></h1>
+    <p class="header-desc">Every input variable fed to the XGBoost sub-models — what it is clinically, how it is derived from DiNC data, and why it matters for risk prediction.</p>
+  </div>
+
+  <div class="legend">
+    <div class="legend-label">Status legend</div>
+    <div class="legend-item"><span class="tag tag-req">required</span> Row dropped from training if this is missing. Inference also skips the sub-model.</div>
+    <div class="legend-item"><span class="tag tag-opt">optional</span> Passed as null if absent. XGBoost handles natively — no imputation.</div>
+    <div class="legend-item"><span class="tag tag-der">derived</span> Computed from other DiNC fields. Not stored directly.</div>
+    <div class="legend-item"><span class="tag tag-hard">hard rule</span> Also used raw (un-normalised) for clinical override thresholds.</div>
+  </div>
+
+  <!-- VITALS + LABS -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-title">Vitals + Labs</div>
+      <div class="section-source">source: BP readings · lab results in DiNC</div>
+    </div>
+    <div class="section-desc">All continuous values are z-scored: z = (value − μ) / σ, where μ and σ are computed from the training set and stored as artefacts. Raw values are separately retained for hard rule evaluation.</div>
+
+    <div class="feat-list">
+
+      <div class="feat-card">
+        <div class="feat-card-top" onclick="toggle(this)">
+          <div>
+            <div class="feat-name">bp_systolic_z</div>
+            <div class="feat-unit">mmHg → z-score</div>
+          </div>
+          <div class="feat-meta">
+            <span class="tag tag-req">required</span>
+            <span class="tag tag-hard">hard rule</span>
+          </div>
+          <div class="feat-summary">Systolic blood pressure, normalised. The top number in a BP reading — pressure when the heart beats. Elevated values are a primary maternal risk signal.</div>
+          <div class="expand-hint">+ expand</div>
+        </div>
+        <div class="feat-body">
+          <div class="feat-body-inner">
+            <div>
+              <div class="def-label">Clinical meaning</div>
+              <div class="def-text">Systolic BP is the peak pressure in your arteries when the heart contracts. Normal ≈ 120 mmHg. Sustained elevation in pregnancy causes damage to blood vessels in the placenta and maternal organs. It is the primary signal for pre-eclampsia and hypertensive crisis.</div>
+              <div class="example-box">
+                <strong>Example values</strong>
+                Normal: 118 mmHg → z = −0.13<br>
+                Elevated: 140 mmHg → z = +1.33<br>
+                Critical: 165 mmHg → z = +3.00 — hard rule M1 fires
+              </div>
+            </div>
+            <div>
+              <div class="def-label">Hard rule thresholds (raw value)</div>
+              <div class="def-text">M1: BP ≥ 160 → Tier 1 immediately (any trimester)<br>M2: BP ≥ 140 AND trimester 3 → Tier 1<br>N3: BP ≥ 160 in diabetic patient → Tier 1</div>
+              <div class="example-box">
+                <strong>Sub-model use</strong>
+                Present in SM1, SM2 (maternal) and SM3, SM4 (NCD). In maternal models, BP interacts with trimester — the same elevation is higher risk in T3 than T1.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="feat-card">
+        <div class="feat-card-top" onclick="toggle(this)">
+          <div>
+            <div class="feat-name">bp_diastolic_z</div>
+            <div class="feat-unit">mmHg → z-score</div>
+          </div>
+          <div class="feat-meta">
+            <span class="tag tag-req">required</span>
+            <span class="tag tag-hard">hard rule</span>
+          </div>
+          <div class="feat-summary">Diastolic blood pressure, normalised. The bottom number — pressure when the heart rests. Used alongside systolic because the combination is more informative than either alone.</div>
+          <div class="expand-hint">+ expand</div>
+        </div>
+        <div class="feat-body">
+          <div class="feat-body-inner">
+            <div>
+              <div class="def-label">Clinical meaning</div>
+              <div class="def-text">Diastolic BP reflects vascular resistance — how hard the heart works to push blood through. Normal ≈ 80 mmHg. Diastolic ≥ 90 in pregnancy is a diagnostic criterion for gestational hypertension alongside systolic ≥ 140.</div>
+              <div class="example-box">
+                <strong>Why both systolic and diastolic</strong>
+                Systolic 138 + diastolic 92 = borderline pre-eclampsia.<br>
+                Systolic 155 + diastolic 75 = isolated systolic hypertension (different risk profile).<br>
+                The model captures this interaction via tree splits.
+              </div>
+            </div>
+            <div>
+              <div class="def-label">Clinical reference ranges</div>
+              <div class="def-text">Normal: &lt; 80 mmHg<br>Elevated: 80–89 mmHg<br>Stage 1 hypertension: 90–99 mmHg<br>Stage 2 hypertension: ≥ 100 mmHg</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="feat-card">
+        <div class="feat-card-top" onclick="toggle(this)">
+          <div>
+            <div class="feat-name">hba1c_z</div>
+            <div class="feat-unit">% → z-score</div>
+          </div>
+          <div class="feat-meta">
+            <span class="tag tag-req">required</span>
+            <span class="tag tag-hard">hard rule</span>
+          </div>
+          <div class="feat-summary">Glycated haemoglobin, normalised. Reflects average blood glucose over 2–3 months — cannot be gamed by fasting before the test. Dominant signal in NCD sub-models.</div>
+          <div class="expand-hint">+ expand</div>
+        </div>
+        <div class="feat-body">
+          <div class="feat-body-inner">
+            <div>
+              <div class="def-label">Clinical meaning</div>
+              <div class="def-text">When blood glucose is elevated, glucose attaches to haemoglobin. HbA1c measures the percentage of haemoglobin that has been glycated over the lifespan of a red blood cell (~90 days). Unlike a glucose reading, it reflects long-term control — a patient cannot temporarily improve it by fasting before the test.</div>
+              <div class="example-box">
+                <strong>Diagnostic thresholds</strong>
+                Normal: &lt; 5.7%<br>
+                Prediabetes: 5.7–6.4%<br>
+                Diabetes: ≥ 6.5% (ADA criterion)<br>
+                Poorly controlled: ≥ 8.0%<br>
+                Very poorly controlled: ≥ 10.0% → hard rule N1 fires
+              </div>
+            </div>
+            <div>
+              <div class="def-label">Why it matters here</div>
+              <div class="def-text">In NCD sub-models (SM3/SM4), hba1c_z is typically the highest-SHAP feature. A patient on medication with HbA1c still at 9.5 is not responding to treatment. In maternal models it is optional — gestational diabetes is screened differently, but an existing diabetic who is pregnant needs both branches active.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="feat-card">
+        <div class="feat-card-top" onclick="toggle(this)">
+          <div>
+            <div class="feat-name">glucose_z</div>
+            <div class="feat-unit">mg/dL → z-score</div>
+          </div>
+          <div class="feat-meta">
+            <span class="tag tag-req">required</span>
+            <span class="tag tag-hard">hard rule</span>
+          </div>
+          <div class="feat-summary">Fasting blood glucose, normalised. Measured after 8 hours without food. Complements HbA1c — snapshot today vs 3-month average. Carries more weight when HbA1c is unavailable.</div>
+          <div class="expand-hint">+ expand</div>
+        </div>
+        <div class="feat-body">
+          <div class="feat-body-inner">
+            <div>
+              <div class="def-label">Clinical meaning</div>
+              <div class="def-text">Blood glucose after an overnight fast. Above-normal values indicate insufficient insulin action. Unlike HbA1c, this reflects the patient's current metabolic state rather than the 3-month average.</div>
+              <div class="example-box">
+                <strong>Reference ranges</strong>
+                Normal: &lt; 100 mg/dL<br>
+                Prediabetes: 100–125 mg/dL<br>
+                Diabetes: ≥ 126 mg/dL (WHO criterion)<br>
+                Hyperosmolar risk: ≥ 300 mg/dL → hard rule N2 fires
+              </div>
+            </div>
+            <div>
+              <div class="def-label">Rural PHC relevance</div>
+              <div class="def-text">In many PHC settings, a glucometer is more available than HbA1c testing equipment. In SM4 (NCD, no medication) where HbA1c may be unavailable, fasting glucose often becomes the primary glycaemic signal. XGBoost handles the case where only one of these two features is present.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="feat-card">
+        <div class="feat-card-top" onclick="toggle(this)">
+          <div>
+            <div class="feat-name">haemoglobin_z</div>
+            <div class="feat-unit">g/dL → z-score</div>
+          </div>
+          <div class="feat-meta">
+            <span class="tag tag-opt">optional</span>
+            <span class="tag tag-hard">hard rule</span>
+          </div>
+          <div class="feat-summary">Blood haemoglobin concentration, normalised. Measures oxygen-carrying capacity of blood. Severe anaemia in pregnancy is a significant maternal mortality risk factor.</div>
+          <div class="expand-hint">+ expand</div>
+        </div>
+        <div class="feat-body">
+          <div class="feat-body-inner">
+            <div>
+              <div class="def-label">Clinical meaning</div>
+              <div class="def-text">Haemoglobin carries oxygen from lungs to tissues. In pregnancy, demand increases significantly. Anaemia means insufficient oxygen delivery to both mother and fetus. Severe anaemia (Hb &lt; 7 g/dL) leads to cardiac stress, increased risk during delivery, and fetal growth restriction.</div>
+              <div class="example-box">
+                <strong>Reference ranges (women)</strong>
+                Normal: 12–16 g/dL<br>
+                Mild anaemia: 10–11.9 g/dL<br>
+                Moderate: 7–9.9 g/dL<br>
+                Severe: &lt; 7 g/dL → hard rule M5 fires
+              </div>
+            </div>
+            <div>
+              <div class="def-label">Why optional</div>
+              <div class="def-text">Not every PHC has a haemoglobinometer at every visit. When present, it is especially informative in SM2 (maternal, no medication) — a patient with no prescription records but severely low Hb is at acute risk without any drug adherence data to signal it. The model weighs it heavily when it exists.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="feat-card">
+        <div class="feat-card-top" onclick="toggle(this)">
+          <div>
+            <div class="feat-name">bmi_z</div>
+            <div class="feat-unit">kg/m² → z-score (clipped ±3σ)</div>
+          </div>
+          <div class="feat-meta">
+            <span class="tag tag-req">required</span>
+          </div>
+          <div class="feat-summary">Body Mass Index, normalised and clipped at ±3σ. Interacts with BP and glucose — high BMI compounds both. Clipped to prevent data entry errors from dominating predictions.</div>
+          <div class="expand-hint">+ expand</div>
+        </div>
+        <div class="feat-body">
+          <div class="feat-body-inner">
+            <div>
+              <div class="def-label">Clinical meaning</div>
+              <div class="def-text">BMI = weight (kg) / height (m)². A measure of weight relative to height. High BMI in pregnancy is associated with gestational diabetes, hypertension, delivery complications. Low BMI (underweight &lt;18.5) is also a risk — associated with preterm birth and low birth weight.</div>
+              <div class="example-box">
+                <strong>Reference ranges</strong>
+                Underweight: &lt; 18.5<br>
+                Normal: 18.5–24.9<br>
+                Overweight: 25–29.9<br>
+                Obese: ≥ 30
+              </div>
+            </div>
+            <div>
+              <div class="def-label">Why clip at ±3σ</div>
+              <div class="def-text">Rural PHC data entry often has errors — weight recorded in lbs when the field expects kg, or height in cm when expecting metres. These produce extreme BMI values (e.g. 800) that would dominate every tree split. Clipping at ±3σ removes the influence of these outliers without affecting real high-BMI patients who cluster within 2–3σ.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="feat-card">
+        <div class="feat-card-top" onclick="toggle(this)">
+          <div>
+            <div class="feat-name">creatinine_z</div>
+            <div class="feat-unit">mg/dL → z-score</div>
+          </div>
+          <div class="feat-meta">
+            <span class="tag tag-opt">optional</span>
+            <span class="tag tag-hard">hard rule</span>
+          </div>
+          <div class="feat-summary">Serum creatinine, normalised. A waste product filtered by kidneys — elevated levels signal renal impairment. NCD sub-models only, as diabetic nephropathy is a leading complication.</div>
+          <div class="expand-hint">+ expand</div>
+        </div>
+        <div class="feat-body">
+          <div class="feat-body-inner">
+            <div>
+              <div class="def-label">Clinical meaning</div>
+              <div class="def-text">Creatinine is a waste product of muscle metabolism, filtered by the kidneys. When kidneys are damaged (as in diabetic nephropathy), they filter less efficiently and creatinine accumulates in blood. It is the standard marker for kidney function in diabetes management.</div>
+              <div class="example-box">
+                <strong>Reference ranges (women)</strong>
+                Normal: 0.6–1.1 mg/dL<br>
+                Mildly elevated: 1.2–2.0 mg/dL<br>
+                Significant impairment: &gt; 2.0 mg/dL → hard rule N5 fires
+              </div>
+            </div>
+            <div>
+              <div class="def-label">Why optional</div>
+              <div class="def-text">Renal function tests are less commonly ordered at PHC level — they typically require a laboratory rather than a point-of-care test. When available, especially for a known diabetic patient, creatinine significantly improves NCD risk stratification. Absent for most maternal-only patients.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- MEDICATION -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-title">Medication Features</div>
+      <div class="section-source">source: drug name · dosage · dispensing date in DiNC EMR</div>
+    </div>
+    <div class="section-desc">Derived from the prescription and pharmacy dispensing records. The routing flag <code>on_medication</code> determines which of the four sub-models runs for each branch.</div>
+
+    <div class="feat-list">
+
+      <div class="feat-card">
+        <div class="feat-card-top" onclick="toggle(this)">
+          <div>
+            <div class="feat-name">on_medication</div>
+            <div class="feat-unit">boolean 0 / 1</div>
+          </div>
+          <div class="feat-meta">
+            <span class="tag tag-der">derived</span>
+          </div>
+          <div class="feat-summary">Whether the patient has any active prescription in DiNC. The routing flag — determines which sub-model runs. Derived from any drug record with last dispensed date within 90 days.</div>
+          <div class="expand-hint">+ expand</div>
+        </div>
+        <div class="feat-body">
+          <div class="feat-body-inner">
+            <div>
+              <div class="def-label">How it is derived</div>
+              <div class="def-text">Computed as: <code>any(last_dispensed_date &gt; today − 90 days)</code> across all prescription records for this patient. The 90-day window is conservative — most chronic medications require collection every 30–60 days, so 90 days allows for missed collections without falsely routing to "no medication."</div>
+            </div>
+            <div>
+              <div class="def-label">Why it matters</div>
+              <div class="def-text">A patient on medication and a patient not on medication have structurally different feature sets. <code>adherence_gap_days</code>, <code>drug_class_code</code>, <code>dose_change_flag</code>, and <code>polypharmacy_count</code> simply do not exist for an unmedicated patient. Running both on the same model would create a highly unbalanced and noisy training set. Separate models prevent this.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="feat-card">
+        <div class="feat-card-top" onclick="toggle(this)">
+          <div>
+            <div class="feat-name">drug_class_code</div>
+            <div class="feat-unit">integer (ATC code)</div>
+          </div>
+          <div class="feat-meta">
+            <span class="tag tag-req">required SM1/SM3</span>
+            <span class="tag tag-der">derived</span>
+          </div>
+          <div class="feat-summary">ATC drug class as an integer. Drug name from DiNC EMR looked up in a district formulary table using fuzzy matching. Contextualises other lab values — the same HbA1c means different things depending on which drug the patient is on.</div>
+          <div class="expand-hint">+ expand</div>
+        </div>
+        <div class="feat-body">
+          <div class="feat-body-inner">
+            <div>
+              <div class="def-label">How it is derived</div>
+              <div class="def-text">The drug name string from DiNC (e.g. "Metformin 500mg") is matched against the district formulary using Levenshtein distance ≤ 2 (to handle spelling variants like "Metformine" or "meformin"). The match returns an ATC level-2 code (e.g. A10BA02 for biguanides), which is encoded as an integer for the model.</div>
+              <div class="example-box">
+                <strong>ATC code examples</strong>
+                Metformin → A10BA → code 10<br>
+                Insulin → A10A → code 11<br>
+                ACE inhibitors → C09A → code 22<br>
+                Statins → C10A → code 31<br>
+                Iron supplements → B03A → code 51<br>
+                Methyldopa (BP in pregnancy) → C02A → code 42
+              </div>
+            </div>
+            <div>
+              <div class="def-label">Why it matters</div>
+              <div class="def-text">HbA1c of 8.5 in a patient on metformin alone means first-line therapy is not controlling the disease — moderate risk, consider escalating. HbA1c of 8.5 in a patient already on insulin + metformin means a more advanced case with treatment-resistant hyperglycaemia — higher risk. The drug class code allows the model to make this distinction.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="feat-card">
+        <div class="feat-card-top" onclick="toggle(this)">
+          <div>
+            <div class="feat-name">adherence_gap_days</div>
+            <div class="feat-unit">integer days</div>
+          </div>
+          <div class="feat-meta">
+            <span class="tag tag-req">required SM1/SM3</span>
+            <span class="tag tag-der">derived</span>
+            <span class="tag tag-hard">hard rule</span>
+          </div>
+          <div class="feat-summary">Days since last medication collection. Closest proxy for adherence without a pill count. Set to 999 if no dispensing record exists — not a missing value, a meaningful clinical signal.</div>
+          <div class="expand-hint">+ expand</div>
+        </div>
+        <div class="feat-body">
+          <div class="feat-body-inner">
+            <div>
+              <div class="def-label">How it is derived</div>
+              <div class="def-text">Computed as: <code>today − last_dispensed_date</code>. If no dispensing record exists at all (patient was prescribed but never collected), set to 999. This is not the same as null — 999 explicitly tells the model "this patient has a prescription but has never collected it," which is a distinct clinical situation from having no prescription.</div>
+              <div class="example-box">
+                <strong>Interpretation examples</strong>
+                0–14 days: likely adhering<br>
+                15–30 days: borderline (monthly supply)<br>
+                31–60 days: likely lapsed<br>
+                &gt; 60 days: high probability of non-adherence<br>
+                999: never collected
+              </div>
+            </div>
+            <div>
+              <div class="def-label">Key interactions in model</div>
+              <div class="def-text">In SM1 (maternal + medication), <code>adherence_gap_days × trimester</code> is the most informative interaction. A T3 patient who has not collected iron or methyldopa in 3 weeks is at acute risk. Hard rule N4: HbA1c ≥ 8.0 AND gap &gt; 30 days → Tier 1, regardless of model score.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="feat-card">
+        <div class="feat-card-top" onclick="toggle(this)">
+          <div>
+            <div class="feat-name">dose_change_flag</div>
+            <div class="feat-unit">boolean 0 / 1</div>
+          </div>
+          <div class="feat-meta">
+            <span class="tag tag-opt">optional</span>
+            <span class="tag tag-der">derived</span>
+          </div>
+          <div class="feat-summary">Whether the patient's prescription was changed in the last 60 days. A recent dose escalation often means the prior dose was failing to control the condition.</div>
+          <div class="expand-hint">+ expand</div>
+        </div>
+        <div class="feat-body">
+          <div class="feat-body-inner">
+            <div>
+              <div class="def-label">How it is derived</div>
+              <div class="def-text">Derived by comparing the current prescription record to the previous one: if dose (mg) or drug name changed in the last 60 days, flag = 1. Absent from SM2 and SM4 (no medication records exist for these patients).</div>
+            </div>
+            <div>
+              <div class="def-label">Why it matters</div>
+              <div class="def-text">A dose escalation is a clinical signal that the previous regimen was inadequate. A patient whose antihypertensive was just doubled is more likely still uncontrolled than a patient stable on the same dose for 2 years. When this flag fires alongside elevated BP or HbA1c, it reinforces the risk reading.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="feat-card">
+        <div class="feat-card-top" onclick="toggle(this)">
+          <div>
+            <div class="feat-name">polypharmacy_count</div>
+            <div class="feat-unit">integer 0–10+</div>
+          </div>
+          <div class="feat-meta">
+            <span class="tag tag-opt">optional</span>
+            <span class="tag tag-der">derived</span>
+          </div>
+          <div class="feat-summary">Number of distinct active drug classes the patient is currently on. High polypharmacy signals complex multimorbid patients and indicates disease has progressed past first-line treatment.</div>
+          <div class="expand-hint">+ expand</div>
+        </div>
+        <div class="feat-body">
+          <div class="feat-body-inner">
+            <div>
+              <div class="def-label">How it is derived</div>
+              <div class="def-text">Count of unique ATC class codes in the patient's active prescription list (last_dispensed within 90 days). Each distinct drug class counted once, regardless of how many drugs within that class are prescribed.</div>
+              <div class="example-box">
+                <strong>Example</strong>
+                Metformin (A10) + Insulin (A10) + Lisinopril (C09) + Atorvastatin (C10) = count 3, not 4, because metformin and insulin are the same ATC class.
+              </div>
+            </div>
+            <div>
+              <div class="def-label">Why it matters</div>
+              <div class="def-text">Polypharmacy (4+ drug classes) signals a complex patient with multiple active conditions — higher risk of drug interactions, non-adherence due to pill burden, and more advanced disease. A diabetic patient on 4 drug classes has already progressed through multiple lines of treatment. This feature contextualises the severity independently of individual lab values.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ANC / PNC -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-title">ANC / PNC Features</div>
+      <div class="section-source">source: antenatal care register · visit records in DiNC</div>
+    </div>
+    <div class="section-desc">Features derived from the pregnancy care record. Active only when the maternal branch is triggered (gestational_week present). Low compliance and recent visit gaps are among the strongest predictors of adverse maternal outcomes.</div>
+
+    <div class="feat-list">
+
+      <div class="feat-card">
+        <div class="feat-card-top" onclick="toggle(this)">
+          <div>
+            <div class="feat-name">gestational_week</div>
+            <div class="feat-unit">integer 1–42 weeks</div>
+          </div>
+          <div class="feat-meta">
+            <span class="tag tag-req">required</span>
+          </div>
+          <div class="feat-summary">How many weeks pregnant the patient is. Also the branching condition — if null, the maternal branch does not activate. Risk profile changes non-linearly across pregnancy, especially in T3.</div>
+          <div class="expand-hint">+ expand</div>
+        </div>
+        <div class="feat-body">
+          <div class="feat-body-inner">
+            <div>
+              <div class="def-label">Clinical meaning</div>
+              <div class="def-text">Gestational age in weeks from last menstrual period. Most acute obstetric complications — eclampsia, placental abruption, preterm labour, pre-eclampsia — cluster in the third trimester (week 27+). The model uses the raw week number (not just trimester) to distinguish week 28 from week 38 within T3.</div>
+            </div>
+            <div>
+              <div class="def-label">Role in the model</div>
+              <div class="def-text">Serves both as the maternal branch trigger (if null → maternal branch off) and as a direct feature in SM1 and SM2. The model learns that the same BP elevation carries different risk depending on gestational age — a BP of 142 at week 36 is an emergency; the same reading at week 10 is elevated but less acute.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="feat-card">
+        <div class="feat-card-top" onclick="toggle(this)">
+          <div>
+            <div class="feat-name">trimester</div>
+            <div class="feat-unit">integer 1 / 2 / 3</div>
+          </div>
+          <div class="feat-meta">
+            <span class="tag tag-der">derived</span>
+            <span class="tag tag-req">required</span>
+          </div>
+          <div class="feat-summary">Derived from gestational_week: T1 = weeks 1–13, T2 = 14–26, T3 = 27+. Used for group-level interactions in hard rules and as a cleaner categorical signal alongside raw gestational week.</div>
+          <div class="expand-hint">+ expand</div>
+        </div>
+        <div class="feat-body">
+          <div class="feat-body-inner">
+            <div>
+              <div class="def-label">Why both trimester and gestational_week</div>
+              <div class="def-text">Gestational_week gives fine-grained risk (week 36 vs week 28 are both T3 but different acuity). Trimester gives a cleaner categorical grouping for interactions. The model can learn "T3 AND missed visits" as a pattern more easily when trimester is its own feature, rather than having to learn the threshold at week 27 from the raw number alone.</div>
+            </div>
+            <div>
+              <div class="def-label">Hard rule references</div>
+              <div class="def-text">M2: BP ≥ 140 AND trimester = 3 → Tier 1<br>M3: anc_compliance &lt; 40% AND trimester = 3 → Tier 1<br>M4: anc_compliance &lt; 50% AND trimester = 2 AND BP &gt; 130 → Tier 1</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="feat-card">
+        <div class="feat-card-top" onclick="toggle(this)">
+          <div>
+            <div class="feat-name">anc_compliance</div>
+            <div class="feat-unit">float 0–1</div>
+          </div>
+          <div class="feat-meta">
+            <span class="tag tag-req">required</span>
+            <span class="tag tag-der">derived</span>
+            <span class="tag tag-hard">hard rule</span>
+          </div>
+          <div class="feat-summary">Ratio of ANC visits completed to visits expected at this gestational age. WHO recommends 8 contacts. Low compliance is one of the strongest predictors of adverse outcomes — unmonitored patients develop undetected complications.</div>
+          <div class="expand-hint">+ expand</div>
+        </div>
+        <div class="feat-body">
+          <div class="feat-body-inner">
+            <div>
+              <div class="def-label">How it is derived</div>
+              <div class="def-text">Formula: <code>visits_done / visits_expected</code>. The denominator (expected visits) is derived from the WHO ANC schedule — 8 contacts recommended across a normal pregnancy, with specific timing windows. The expected count at a given gestational week is calculated from this schedule, not from the total 8.</div>
+              <div class="example-box">
+                <strong>Examples</strong>
+                Week 32, 4 visits done / 6 expected = 0.67 (moderate)<br>
+                Week 36, 2 visits done / 7 expected = 0.29 (very low)<br>
+                Week 16, 2 visits done / 2 expected = 1.00 (compliant)
+              </div>
+            </div>
+            <div>
+              <div class="def-label">Hard rule thresholds</div>
+              <div class="def-text">M3: compliance &lt; 40% AND T3 → Tier 1 (severely under-monitored in highest-risk period)<br>M4: compliance &lt; 50% AND T2 AND BP &gt; 130 → Tier 1 (elevated BP, not being monitored, still in T2)</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="feat-card">
+        <div class="feat-card-top" onclick="toggle(this)">
+          <div>
+            <div class="feat-name">last_visit_gap_days</div>
+            <div class="feat-unit">integer days</div>
+          </div>
+          <div class="feat-meta">
+            <span class="tag tag-req">required</span>
+            <span class="tag tag-der">derived</span>
+          </div>
+          <div class="feat-summary">Days since the patient's last visit to any DiNC facility. Captures recency — a patient with good historical compliance who then goes silent in T3 would not be caught by anc_compliance alone.</div>
+          <div class="expand-hint">+ expand</div>
+        </div>
+        <div class="feat-body">
+          <div class="feat-body-inner">
+            <div>
+              <div class="def-label">Distinction from anc_compliance</div>
+              <div class="def-text"><code>anc_compliance</code> is a historical ratio — it can look acceptable even if the patient dropped out recently. <code>last_visit_gap_days</code> captures the recency dimension. A patient with compliance = 0.75 but who has not been seen in 45 days during T3 is at high risk despite the reasonable compliance ratio.</div>
+            </div>
+            <div>
+              <div class="def-label">Sub-model importance</div>
+              <div class="def-text">In SM2 (maternal, no medication), this is the most important feature after BP — there is no adherence_gap signal, so visit recency becomes the primary proxy for patient engagement. In NCD sub-models (SM3, SM4), it captures whether the patient is still being seen at all, which matters for monitoring glucose and renal function over time.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="feat-card">
+        <div class="feat-card-top" onclick="toggle(this)">
+          <div>
+            <div class="feat-name">high_risk_flag_prev</div>
+            <div class="feat-unit">boolean 0 / 1</div>
+          </div>
+          <div class="feat-meta">
+            <span class="tag tag-opt">optional</span>
+          </div>
+          <div class="feat-summary">Whether the patient was flagged as high-risk at any prior DiNC encounter. A strong prior — even if today's readings look better, a history of being flagged is clinically meaningful.</div>
+          <div class="expand-hint">+ expand</div>
+        </div>
+        <div class="feat-body">
+          <div class="feat-body-inner">
+            <div>
+              <div class="def-label">How it is derived</div>
+              <div class="def-text">Pulled from the patient's longitudinal record in DiNC — any prior encounter that resulted in a Tier 1 or Tier 2 classification. Optional because first-time patients on DiNC have no prior encounter history (null).</div>
+            </div>
+            <div>
+              <div class="def-label">Why it matters</div>
+              <div class="def-text">A patient with prior high-risk flags has a known clinical concern on record. Today's readings might temporarily appear better (white coat normotension, one normal glucose reading), but the prior flag is a signal that this patient needs continued vigilance. The model uses it as a Bayesian prior.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- DERIVED -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-title">Derived Features</div>
+      <div class="section-source">computed from multiple DiNC fields · not stored directly</div>
+    </div>
+    <div class="section-desc">Computed at preprocessing time. Encode temporal patterns that cannot be captured from any single field alone.</div>
+
+    <div class="feat-list">
+      <div class="feat-card">
+        <div class="feat-card-top" onclick="toggle(this)">
+          <div>
+            <div class="feat-name">hba1c_delta</div>
+            <div class="feat-unit">% per 30 days</div>
+          </div>
+          <div class="feat-meta">
+            <span class="tag tag-der">derived</span>
+            <span class="tag tag-opt">optional · SM3 only</span>
+          </div>
+          <div class="feat-summary">Rate of change in HbA1c per 30 days. Only computed when ≥ 2 timestamped readings exist in the last 180 days. Captures trajectory — a rising HbA1c despite medication is a different risk level from a stable one.</div>
+          <div class="expand-hint">+ expand</div>
+        </div>
+        <div class="feat-body">
+          <div class="feat-body-inner">
+            <div>
+              <div class="def-label">Formula</div>
+              <div class="def-text"><code>(HbA1c_current − HbA1c_previous) / days_between × 30</code><br><br>Positive delta = worsening. Negative delta = improving. Only computed when ≥ 2 readings exist within 180 days — otherwise null, and the model runs without it.</div>
+              <div class="example-box">
+                <strong>Example</strong>
+                Reading 1 (90 days ago): HbA1c = 7.2%<br>
+                Reading 2 (today): HbA1c = 9.1%<br>
+                Delta = (9.1 − 7.2) / 90 × 30 = +0.63% per month<br>
+                Interpretation: worsening rapidly despite medication
+              </div>
+            </div>
+            <div>
+              <div class="def-label">Why it is the most important SM3 feature</div>
+              <div class="def-text">A patient stable at HbA1c 8.0 for 12 months is poorly controlled but predictable. A patient who jumped from 6.8 to 9.1 in 3 months is deteriorating rapidly — the drug is failing, adherence may have collapsed, or a new condition is interfering. The point-in-time HbA1c value (9.1) does not tell you this. Only the trajectory does. When hba1c_delta exists, it is typically the highest-SHAP feature in SM3.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EXCLUSIONS -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-title">What the model does not use</div>
+    </div>
+    <div class="section-desc">Deliberately excluded — not because the data is unavailable, but because including it would introduce bias, noise, or ethical concerns.</div>
+    <div class="exclusion-grid">
+      <div class="excl-card">
+        <div class="excl-name">Age</div>
+        <div class="excl-reason">Optional in SM3/SM4 only. Excluded from maternal models — gestational_week and trimester already encode the pregnancy timeline. Age in rural maternal health correlates strongly with socioeconomic status, which would introduce confounding.</div>
+      </div>
+      <div class="excl-card">
+        <div class="excl-name">Name · ABHA ID · location</div>
+        <div class="excl-reason">Identifying fields stripped before the feature vector is built. The model operates on numbers only. Patient identity is rejoined to the output record at the writing stage, after prediction.</div>
+      </div>
+      <div class="excl-card">
+        <div class="excl-name">Doctor notes · free text</div>
+        <div class="excl-reason">No NLP on clinical notes in Phase 1. Free text quality in rural PHCs is inconsistent — abbreviations, local language terms, blank fields. Structured fields are the only inputs to prevent noise from degrading predictions.</div>
+      </div>
+      <div class="excl-card">
+        <div class="excl-name">Socioeconomic indicators</div>
+        <div class="excl-reason">Income, caste, household size, and occupation are not features. Not available consistently in DiNC, and including them would make the model discriminatory — patients from lower socioeconomic backgrounds would receive higher risk scores due to confounders, not clinical risk.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUB-MODEL TABLE -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-title">Feature presence by sub-model</div>
+    </div>
+    <table class="use-table">
+      <thead>
+        <tr>
+          <th style="text-align:left">Feature</th>
+          <th>SM1<br>Mat·med</th>
+          <th>SM2<br>Mat·no med</th>
+          <th>SM3<br>NCD·med</th>
+          <th>SM4<br>NCD·no med</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>bp_systolic_z</td><td class="check">✓</td><td class="check">✓</td><td class="check">✓</td><td class="check">✓</td></tr>
+        <tr><td>bp_diastolic_z</td><td class="check">✓</td><td class="check">✓</td><td class="check">✓</td><td class="check">✓</td></tr>
+        <tr><td>hba1c_z</td><td class="check">✓</td><td class="dash">—</td><td class="check">✓</td><td class="check">✓</td></tr>
+        <tr><td>glucose_z</td><td class="dash">—</td><td class="dash">—</td><td class="check">✓</td><td class="check">✓</td></tr>
+        <tr><td>haemoglobin_z</td><td class="check">opt</td><td class="check">✓</td><td class="check">opt</td><td class="dash">—</td></tr>
+        <tr><td>bmi_z</td><td class="check">opt</td><td class="check">✓</td><td class="check">✓</td><td class="check">✓</td></tr>
+        <tr><td>creatinine_z</td><td class="dash">—</td><td class="dash">—</td><td class="check">opt</td><td class="check">opt</td></tr>
+        <tr><td>drug_class_code</td><td class="check">✓</td><td class="dash">—</td><td class="check">✓</td><td class="dash">—</td></tr>
+        <tr><td>adherence_gap_days</td><td class="check">✓</td><td class="dash">—</td><td class="check">✓</td><td class="dash">—</td></tr>
+        <tr><td>dose_change_flag</td><td class="check">opt</td><td class="dash">—</td><td class="check">opt</td><td class="dash">—</td></tr>
+        <tr><td>polypharmacy_count</td><td class="check">opt</td><td class="dash">—</td><td class="check">✓</td><td class="dash">—</td></tr>
+        <tr><td>gestational_week</td><td class="check">✓</td><td class="check">✓</td><td class="dash">—</td><td class="dash">—</td></tr>
+        <tr><td>trimester</td><td class="check">✓</td><td class="check">✓</td><td class="dash">—</td><td class="dash">—</td></tr>
+        <tr><td>anc_compliance</td><td class="check">✓</td><td class="check">✓</td><td class="dash">—</td><td class="dash">—</td></tr>
+        <tr><td>last_visit_gap_days</td><td class="check">✓</td><td class="check">✓</td><td class="check">✓</td><td class="check">✓</td></tr>
+        <tr><td>high_risk_flag_prev</td><td class="check">opt</td><td class="check">opt</td><td class="check">opt</td><td class="check">opt</td></tr>
+        <tr><td>hba1c_delta ★</td><td class="dash">—</td><td class="dash">—</td><td class="check">opt</td><td class="dash">—</td></tr>
+        <tr><td>age</td><td class="dash">—</td><td class="dash">—</td><td class="check">opt</td><td class="check">opt</td></tr>
+      </tbody>
+    </table>
+    <div style="margin-top:10px;font-size:12px;color:var(--text3);font-family:'DM Mono',monospace;">✓ = required · opt = optional (passed as null if missing) · — = not used · ★ = only when ≥2 HbA1c readings available</div>
+  </div>
+
+  <div class="footer">
+    <span>MaternaAI · Phase 1 · Reference Document 01 of 02</span>
+    <span>Feature Definitions</span>
+  </div>
+
+</div>
+
+<script>
+function toggle(el) {
+  const body = el.nextElementSibling;
+  const hint = el.querySelector('.expand-hint');
+  const isOpen = body.classList.contains('open');
+  body.classList.toggle('open');
+  hint.textContent = isOpen ? '+ expand' : '− collapse';
+}
+</script>
+</body>
+</html>
